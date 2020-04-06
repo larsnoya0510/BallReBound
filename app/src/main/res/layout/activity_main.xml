@@ -72,4 +72,19 @@
         android:textStyle="bold"
         tools:text="Ball : 100" />
 
+    <Switch
+        android:id="@+id/dispearbleSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="13dp"
+        android:fontFamily="@font/elsie"
+        android:text="Auto Clear  "
+        android:textAlignment="viewStart"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
 </RelativeLayout>
