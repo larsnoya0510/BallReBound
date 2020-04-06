@@ -8,6 +8,7 @@ import android.graphics.drawable.LayerDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.Message
 import android.view.View
 import android.widget.ImageView
@@ -51,8 +52,10 @@ class MainActivity : AppCompatActivity() {
                 for(i in 0 until ballList.size) {
                    var  relative = findViewById<RelativeLayout>(R.id.activity_main_relativelayout)
                     relative!!.removeView(ballList[i].imageView)
+                    ballList[i].mThread.quitSafely()
                 }
                 ballList.clear()
+
             }
         })
     }
@@ -77,7 +80,31 @@ class MainActivity : AppCompatActivity() {
         var isMove: Boolean = false// 是否正在移動
         var relative: RelativeLayout? = null
         var imageView: ImageView? = null
-        var mThread:Thread? = null
+        var mThread:HandlerThread = HandlerThread("BallThread")
+        var ballHandler = Handler()
+        var ballRunnable: Runnable = Runnable {
+            while (this.isMove) {
+                moveX += decX;
+                moveY += decY;
+                if ((moveX + imageView!!.getWidth()) >= relative!!.getWidth()  ) { decX = -decX; }
+                if(moveX < 0){ decX = -decX; }
+                if ((moveY + imageView!!.getHeight() ) >= relative!!.getHeight()) { decY = -decY }
+                if (moveY < 0) { decY = -decY }
+                var message = Message();
+                message.what = MOVE_IMAGE;
+
+                var bundle = Bundle();
+                bundle.putInt("moveX", moveX);
+                bundle.putInt("moveY", moveY);
+                message.setData(bundle);
+                (handler as MyHandler).sendMessage(message);
+                try {
+                    Thread.sleep(10);
+                } catch (e: InterruptedException) {
+                    e.printStackTrace();
+                }
+            }
+        }
         var boundRate: Float = 0F
         init {
             moveX=orginX
@@ -93,6 +120,8 @@ class MainActivity : AppCompatActivity() {
             relative!!.addView(imageView)
             setColor(imageView!!)
             handler = MyHandler(context as MainActivity,imageView)
+            mThread.start()
+            ballHandler = Handler(mThread.getLooper())
         }
         fun setColor(mImageView:ImageView){
             var r= Random.nextInt(0,255)
@@ -109,37 +138,17 @@ class MainActivity : AppCompatActivity() {
         }
         fun start() {
             this.isMove = false;
-             if (!this.isMove) { this.isMove = true; } else { return; }
-            if(mThread==null) {
-                mThread = Thread{
-                    while (this.isMove) {
-                        moveX += decX;
-                        moveY += decY;
-                        if ((moveX + imageView!!.getWidth()) >= relative!!.getWidth()  ) { decX = -decX; }
-                        if(moveX < 0){ decX = -decX; }
-                        if ((moveY + imageView!!.getHeight() ) >= relative!!.getHeight()) { decY = -decY }
-                        if (moveY < 0) { decY = -decY }
-                        var message = Message();
-                        message.what = MOVE_IMAGE;
+             if (!this.isMove) {
+                 this.isMove = true;
+             } else {
+                 return;
+             }
+            ballHandler.post(ballRunnable)
 
-                        var bundle = Bundle();
-                        bundle.putInt("moveX", moveX);
-                        bundle.putInt("moveY", moveY);
-                        message.setData(bundle);
-                        (handler as MyHandler).sendMessage(message);
-                        try {
-                            Thread.sleep(10);
-                        } catch (e: InterruptedException) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                mThread!!.start()
-            }
         }
         fun stop(){
             this.isMove=false
-            if(mThread!=null) mThread?.interrupt()
+            ballHandler.removeCallbacks(ballRunnable)
         }
     }
 }
