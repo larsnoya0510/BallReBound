@@ -5,36 +5,48 @@
     android:id="@+id/activity_main_relativelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
+
         <Button
             android:id="@+id/activity_main_btn_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/button_shape"
             android:text="新增" />
+
         <Button
             android:id="@+id/activity_main_btn_start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/button_shape"
             android:text="開始" />
 
         <Button
             android:id="@+id/activity_main_btn_end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/button_shape"
             android:text="停止" />
+
         <Button
             android:id="@+id/activity_main_btn_clear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/button_shape"
             android:text="清空" />
     </LinearLayout>
 
@@ -44,5 +56,20 @@
         android:layout_height="wrap_content"
         android:background="@drawable/custom_layer"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/ballCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:fontFamily="@font/press_start_2p"
+        android:textAlignment="textEnd"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:text="Ball : 100" />
 
 </RelativeLayout>

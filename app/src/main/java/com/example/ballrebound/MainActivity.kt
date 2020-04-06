@@ -26,11 +26,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ballList = mutableListOf<Ball>()
-
+        showBallCount()
         activity_main_btn_add.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 var mBall = Ball(this@MainActivity)
                 ballList.add(mBall)
+                showBallCount()
             }
         })
         activity_main_btn_end.setOnClickListener(object : View.OnClickListener {
@@ -55,9 +56,13 @@ class MainActivity : AppCompatActivity() {
                     ballList[i].mThread.quitSafely()
                 }
                 ballList.clear()
-
+                showBallCount()
             }
         })
+    }
+
+    private fun showBallCount() {
+        ballCountTextView.text = "Ball : ${ballList.size}"
     }
 
     companion object {
@@ -143,8 +148,7 @@ class MainActivity : AppCompatActivity() {
              } else {
                  return;
              }
-            ballHandler.post(ballRunnable)
-
+            if(!ballHandler.hasCallbacks(ballRunnable))   ballHandler.post(ballRunnable)
         }
         fun stop(){
             this.isMove=false
